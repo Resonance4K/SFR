@@ -1,0 +1,13 @@
+
+# Directories
+
+.vs/
+bin/
+bin-int/
+
+# Files
+
+dir.cmd
+SFR.VC.db
+SFR.VC.VC.opendb
+SFR.vcxproj.user
