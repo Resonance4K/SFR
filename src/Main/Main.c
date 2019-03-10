@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Main.h"
-#include "FileReader.h"
+#include "Main/Main.h"
+#include "Application/FileReader.h"
 
 
 int main(int argc, char ** argv)
