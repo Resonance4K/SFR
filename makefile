@@ -5,6 +5,7 @@ COMPILER_FLAGS := -pedantic -Wall -Wextra
 LINKER_FLAGS :=
 
 SRC_DIR := src
+INC_DIR := src
 BIN_DIR := bin
 OBJ_DIR := bin-int
 
@@ -41,14 +42,14 @@ rebuild: clean build
 
 
 $(EXEC_FILE): $(OBJ_FILES)
-	@ if [ ! -d $(@D) ]; then echo "Creating directory:" $(@D); mkdir $(@D); fi
+	@ if [ ! -d $(@D) ]; then echo "Creating directory:" $(@D); mkdir -p $(@D); fi
 	@ echo "Creating executable:" $@
 	@ $(COMPILER) $(LINKER_FLAGS) $^ -o $@
 
 $(OBJ_DIR)/%.$(OBJ_EXT): $(SRC_DIR)/%.$(SRC_EXT) $(HEADER_FILES)
-	@ if [ ! -d $(@D) ]; then echo "Creating directory:" $(@D); mkdir $(@D); fi
+	@ if [ ! -d $(@D) ]; then echo "Creating directory:" $(@D); mkdir -p $(@D); fi
 	@ echo "Compiling:" $<
-	@ $(COMPILER) $(COMPILER_STANDARD) $(COMPILER_FLAGS) -c $< -o $@
+	@ $(COMPILER) $(COMPILER_STANDARD) $(COMPILER_FLAGS) -I $(INC_DIR) -c $< -o $@
 
 
 
