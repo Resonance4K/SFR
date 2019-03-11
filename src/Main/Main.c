@@ -1,30 +1,49 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-#include "Main/Main.h"
 #include "Application/FileReader.h"
 
 
+// --- Function Prototypes --- //
+
+bool ValidArgumentCount(int argc);
+void PrintArguments(int argc, char ** argv);
+
+
+// --- Constant Definitions --- //
+
+#define TOTAL_DIRECTORY_COUNT 1
+
+
+// The entry point of the program.
 int main(int argc, char ** argv)
 {
 	PrintArguments(argc, argv);
 
-	if (!ArgumentsValid(argc, argv)) { return EXIT_FAILURE; }
+	if (!ValidArgumentCount(argc))
+	{
+		printf("[ERROR] Expected %i argument but instead received %i arguments!\n", TOTAL_DIRECTORY_COUNT, (argc - 1));
+		return EXIT_FAILURE;
+	}
 
-	const char *const path = "D:/Programming/Projects/Visual Studio/SFR";
-	ReadDirectory(path);
+	const char *const path = *(argv + 1);
 
+	ReadRootDirectory(path);
 	DisplayStatistics();
 
 	return EXIT_SUCCESS;
 }
 
-bool ArgumentsValid(int argc, char ** argv)
+// Checks the number of arguments provided to the program by the user.
+// Returns true if it equals the expected number of arguments and false otherwise.
+bool ValidArgumentCount(int argc)
 {
-	return true;
+	return (argc - 1) == TOTAL_DIRECTORY_COUNT;
 }
 
+// Prints the argument count and argument vector.
 void PrintArguments(int argc, char ** argv)
 {
 	printf("\n");
@@ -33,12 +52,12 @@ void PrintArguments(int argc, char ** argv)
 	printf("\n");
 
 	printf("argc:\n");
-	printf("\t%i\n", argc);
+	printf("\t%i\n", (argc - 1));
 
 	printf("\n");
 
 	printf("argv:\n");
-	for (int i = 0; i < argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
 		printf("\t%s\n", *(argv + i));
 	}
