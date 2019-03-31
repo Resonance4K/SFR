@@ -9,37 +9,65 @@
 
 // --- Function Prototypes --- //
 
-void ReadSubDirectory(const char *const path);
+void ReadDirectory(const char *const path, const unsigned int depth);
 DIR * GetDirectory(const char *const path);
 void ReadFile(const char *const path);
 FILE * GetFile(const char *const path, const char *const mode);
 
 
-// Reads the root directory specified by the path that is provided by the user from the argument vector.
+// --- Constant Definitions --- //
+
+#define ROOT_DEPTH    0
+
+
+// Flag that keeps track of whether the root directory that was provided by the user is valid.
+bool ValidRootDirectory = false;
+
+// Defined in "FileReader.h".
 void ReadRootDirectory(const char *const path)
+{
+	ReadDirectory(path, ROOT_DEPTH);
+}
+
+// Reads a directory specified by the path and processes its contents.
+void ReadDirectory(const char *const path, const unsigned int depth)
 {
 	DIR * dir = GetDirectory(path);
 
-	if (dir == NULL) { return; }
+	if (dir == NULL && depth == ROOT_DEPTH)
+	{
+		printf("[ERROR] Not a valid directory: %s\n", path);
+		return;
+	}
 	
 	struct dirent * ent;
 	while ((ent = readdir(dir)) != NULL)
 	{
 		if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0) { continue; }
 
-		printf("%s\n", ent->d_name);
+		char fullpath[1024];
+		strcpy(fullpath, path);
+		strcat(fullpath, "/");
+		strcat(fullpath, ent->d_name);
+		
+		printf("%s\n", fullpath);
+		printf("[DEPTH=%i]\n", depth);
+
+		if (ent->d_type == DT_DIR)
+		{
+			printf("[DIR]\n");
+			ReadDirectory(fullpath, depth + 1);
+		}
+		else if (ent->d_type == DT_REG)
+		{
+			printf("[REG]\n");
+		}
 	}
 
 	closedir(dir);
 }
 
-// Reads the sub directories that reside within the directory specified by the path.
-void ReadSubDirectory(const char *const path)
-{
-
-}
-
-// Returns the directory handle of the directory specified by the path or NULL if the directory does not exist.
+// Returns the directory handle of the directory specified by the path or NULL if the directory cannot be opened.
 DIR * GetDirectory(const char *const path)
 {
 	return opendir(path);
@@ -51,13 +79,13 @@ void ReadFile(const char *const path)
 	FILE * file = GetFile(path, "r");
 }
 
-// Returns the file handle of the file specified by the path in the specified mode or NULL if the file does not exist.
+// Returns the file handle of the file specified by the path in the specified mode or NULL if the file cannot be opened.
 FILE * GetFile(const char *const path, const char *const mode)
 {
 	return fopen(path, mode);
 }
 
-// Displays the statistics of all supported source files that were read from the provided root directory.
+// Defined in "FileReader.h".
 void DisplayStatistics(void)
 {
 

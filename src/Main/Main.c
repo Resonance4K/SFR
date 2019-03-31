@@ -14,7 +14,7 @@ void PrintArguments(int argc, char ** argv);
 
 // --- Constant Definitions --- //
 
-#define TOTAL_DIRECTORY_COUNT 1
+#define TOTAL_DIRECTORY_COUNT    1
 
 
 // The entry point of the program.
@@ -31,8 +31,9 @@ int main(int argc, char ** argv)
 	const char *const path = *(argv + 1);
 
 	ReadRootDirectory(path);
-	DisplayStatistics();
 
+	DisplayStatistics();
+	
 	return EXIT_SUCCESS;
 }
 
