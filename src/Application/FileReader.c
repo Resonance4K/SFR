@@ -21,7 +21,7 @@ FILE * GetFile(const char *const path, const char *const mode);
 
 
 // Flag that keeps track of whether the root directory that was provided by the user is valid.
-bool ValidRootDirectory = false;
+bool IsValidRootDirectory = false;
 
 // Defined in "FileReader.h".
 void ReadRootDirectory(const char *const path)

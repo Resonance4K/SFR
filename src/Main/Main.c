@@ -8,7 +8,7 @@
 
 // --- Function Prototypes --- //
 
-bool ValidArgumentCount(int argc);
+bool IsValidArgumentCount(int argc);
 void PrintArguments(int argc, char ** argv);
 
 
@@ -22,7 +22,7 @@ int main(int argc, char ** argv)
 {
 	PrintArguments(argc, argv);
 
-	if (!ValidArgumentCount(argc))
+	if (!IsValidArgumentCount(argc))
 	{
 		printf("[ERROR] Expected %i argument but instead received %i arguments!\n", TOTAL_DIRECTORY_COUNT, (argc - 1));
 		return EXIT_FAILURE;
@@ -39,7 +39,7 @@ int main(int argc, char ** argv)
 
 // Checks the number of arguments provided to the program by the user.
 // Returns true if it equals the expected number of arguments and false otherwise.
-bool ValidArgumentCount(int argc)
+bool IsValidArgumentCount(int argc)
 {
 	return (argc - 1) == TOTAL_DIRECTORY_COUNT;
 }
