@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #include "Application/FileReader.h"
+#include "Utility/String.h"
 
 
 // --- Function Prototypes --- //
@@ -28,8 +29,9 @@ int main(int argc, char ** argv)
 		return EXIT_FAILURE;
 	}
 
-	const char *const path = *(argv + 1);
+	StrReplaceAll(*(argv + 1), '\\', '/');
 
+	const char *const path = *(argv + 1);
 	ReadRootDirectory(path);
 
 	DisplayStatistics();
