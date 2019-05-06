@@ -18,6 +18,8 @@ char * GetFullPath(const char *const path, const char *const entry_name);
 
 void ReadFile(const char *const path);
 FILE * GetFile(const char *const path, const char *const mode);
+bool IsValidFile(FILE * file);
+char * GetFileExtension(const char *const path);
 
 
 // --- Constant Definitions --- //
@@ -51,6 +53,7 @@ void ReadDirectory(const char *const path, const unsigned int depth)
 	}
 	
 	struct dirent * ent;
+
 	while ((ent = readdir(dir)) != NULL)
 	{
 		const char *const entry_name = ent->d_name;
@@ -60,17 +63,15 @@ void ReadDirectory(const char *const path, const unsigned int depth)
 
 		const char *const fullpath = GetFullPath(path, entry_name);
 		
-		printf("%s\n", fullpath);
-		printf("[DEPTH=%i]\n", depth);
+		printf("[PATH] %s\n", fullpath);
 
 		if (entry_type == DT_DIR)
 		{
-			printf("[DIR]\n");
 			ReadDirectory(fullpath, depth + 1);
 		}
 		else if (entry_type == DT_REG)
 		{
-			printf("[REG]\n");
+			ReadFile(fullpath);
 		}
 
 		free(fullpath);
@@ -106,11 +107,12 @@ char * GetFullPath(const char *const path, const char *const entry_name)
 
 	const unsigned int length = path_length + entry_name_length + 1;
 
-	char *const fullpath = malloc( length * sizeof(*fullpath) );
+	char *const fullpath = malloc( length * sizeof( *fullpath ) + 1 );
 
 	strcpy(fullpath, path);
 	strcat(fullpath, "/");
 	strcat(fullpath, entry_name);
+	*(fullpath + length) = '\0';
 
 	return fullpath;
 }
@@ -119,12 +121,29 @@ char * GetFullPath(const char *const path, const char *const entry_name)
 void ReadFile(const char *const path)
 {
 	FILE * file = GetFile(path, "r");
+
+	if (!IsValidFile(file)) { return; }
+
+	const char *const file_extension = GetFileExtension(path);
+	printf("File Extension = %s\n", file_extension);
 }
 
 // Returns the file handle of the file specified by the path in the specified mode or NULL if the file cannot be opened.
 FILE * GetFile(const char *const path, const char *const mode)
 {
 	return fopen(path, mode);
+}
+
+// Returns true if the file being read is valid (not NULL) and false otherwise.
+bool IsValidFile(FILE * file)
+{
+	return file != NULL;
+}
+
+// Returns the extension of a file.
+char * GetFileExtension(const char *const path)
+{
+	return NULL;
 }
 
 // Defined in "FileReader.h".
