@@ -60,6 +60,20 @@ void StrToUpperCase(char *const string)
 }
 
 // Defined in "String.h".
+int StrFindFront(const char *const string, const char target)
+{
+	for (unsigned int i = 0; i < strlen(string); i++)
+	{
+		if (*(string + i) == target)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+// Defined in "String.h".
 int StrFindBack(const char *const string, const char target)
 {
 	for (int i = (strlen(string) - 1); i >= 0; i--)

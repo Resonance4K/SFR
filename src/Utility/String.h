@@ -12,6 +12,10 @@ void StrToLowerCase(char *const string);
 // Modifies the string by turning all lowercase characters into uppercase characters.
 void StrToUpperCase(char *const string);
 
+// Searches the string from start to end in order to find the target character.
+// Returns the index of the target character or -1 if the target character could not be found.
+int StrFindFront(const char *const string, const char target);
+
 // Searches the string from end to start in order to find the target character.
 // Returns the index of the target character or -1 if the target character could not be found.
 int StrFindBack(const char *const string, const char target);
