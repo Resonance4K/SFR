@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "Application/FileReader.h"
+#include "Utility/String.h"
 
 
 // --- Function Prototypes --- //
@@ -60,6 +61,7 @@ void ReadDirectory(const char *const path, const unsigned int depth)
 		const unsigned int entry_type = ent->d_type;
 
 		if (strcmp(entry_name, ".") == 0 || strcmp(entry_name, "..") == 0) { continue; }
+		if (*entry_name == '.') { continue; }
 
 		const char *const fullpath = GetFullPath(path, entry_name);
 		
@@ -126,6 +128,8 @@ void ReadFile(const char *const path)
 
 	const char *const file_extension = GetFileExtension(path);
 	printf("File Extension = %s\n", file_extension);
+
+	free(file_extension);
 }
 
 // Returns the file handle of the file specified by the path in the specified mode or NULL if the file cannot be opened.
@@ -140,10 +144,15 @@ bool IsValidFile(FILE * file)
 	return file != NULL;
 }
 
-// Returns the extension of a file.
+// Returns the extension of a file or NULL if no extension exists.
+// NOTE: This returns a string whose memory has been allocated on the heap and must be freed after use.
 char * GetFileExtension(const char *const path)
 {
-	return NULL;
+	const int extension_index = StrFindBack(path, '.');
+
+	if (extension_index == -1) { return NULL; }
+
+	return StrSubstr(path, extension_index + 1, strlen(path));
 }
 
 // Defined in "FileReader.h".
