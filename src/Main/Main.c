@@ -32,8 +32,14 @@ int main(int argc, char ** argv)
 	StrReplaceAll(*(argv + 1), '\\', '/');
 
 	const char *const path = *(argv + 1);
-	ReadRootDirectory(path);
 
+	if (!IsValidDirectoryPath(path))
+	{
+		printf("[ERROR] The path specified is not a valid directory: %s\n", path);
+		return EXIT_FAILURE;
+	}
+
+	ReadDirectory(path);
 	DisplayStatistics();
 	
 	return EXIT_SUCCESS;

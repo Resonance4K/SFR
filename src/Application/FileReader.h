@@ -3,10 +3,16 @@
 #define SFR_FILEREADER_H
 
 
-// Reads the root directory specified by the path that is provided by the user from the argument vector.
-void ReadRootDirectory(const char *const path);
+#include <stdbool.h>
 
-// Displays the statistics of all supported source files that were read from the provided root directory.
+
+// Reads the directory specified by the path and processes its contents.
+void ReadDirectory(const char *const path);
+
+// Returns true if the directory path is valid and false otherwise.
+bool IsValidDirectoryPath(const char *const path);
+
+// Displays the statistics of all supported source files that were read.
 void DisplayStatistics(void);
 
 

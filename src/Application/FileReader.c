@@ -1,7 +1,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <dirent.h>
 #include <string.h>
 
@@ -11,10 +10,8 @@
 
 // --- Function Prototypes --- //
 
-void ReadDirectory(const char *const path, const unsigned int depth);
 DIR * GetDirectory(const char *const path);
 bool IsValidDirectory(DIR * dir);
-bool IsRootDirectory(const unsigned int depth);
 char * GetFullPath(const char *const path, const char *const entry_name);
 
 void ReadFile(const char *const path);
@@ -23,35 +20,12 @@ bool IsValidFile(FILE * file);
 char * GetFileExtension(const char *const path);
 
 
-// --- Constant Definitions --- //
-
-#define ROOT_DEPTH    0
-
-
-// Flag that keeps track of whether the root directory that was provided by the user is valid.
-bool IsValidRootDirectory = true;
-
 // Defined in "FileReader.h".
-void ReadRootDirectory(const char *const path)
-{
-	ReadDirectory(path, ROOT_DEPTH);
-}
-
-// Reads a directory specified by the path and processes its contents.
-void ReadDirectory(const char *const path, const unsigned int depth)
+void ReadDirectory(const char *const path)
 {
 	DIR * dir = GetDirectory(path);
 
-	if (!IsValidDirectory(dir))
-	{
-		if (IsRootDirectory(depth))
-		{
-			IsValidRootDirectory = false;
-			printf("[ERROR] Not a valid directory: %s\n", path);
-		}
-
-		return;
-	}
+	if (!IsValidDirectory(dir)) { return; }
 	
 	struct dirent * ent;
 
@@ -69,7 +43,7 @@ void ReadDirectory(const char *const path, const unsigned int depth)
 
 		if (entry_type == DT_DIR)
 		{
-			ReadDirectory(fullpath, depth + 1);
+			ReadDirectory(fullpath);
 		}
 		else if (entry_type == DT_REG)
 		{
@@ -88,16 +62,18 @@ DIR * GetDirectory(const char *const path)
 	return opendir(path);
 }
 
-// Returns true if the directory being read is valid (not NULL) and false otherwise.
+// Returns true if the directory handle is valid (not NULL) and false otherwise.
 bool IsValidDirectory(DIR * dir)
 {
 	return dir != NULL;
 }
 
-// Returns true if the directory being read is the root directory and false otherwise.
-bool IsRootDirectory(const unsigned int depth)
+// Defined in "FileReader.h".
+bool IsValidDirectoryPath(const char *const path)
 {
-	return depth == ROOT_DEPTH;
+	DIR * dir = GetDirectory(path);
+
+	return IsValidDirectory(dir);
 }
 
 // Returns the full path resulting from a concatenation of the path and entry name variables.
@@ -107,7 +83,7 @@ char * GetFullPath(const char *const path, const char *const entry_name)
 	const unsigned int path_length = strlen(path);
 	const unsigned int entry_name_length = strlen(entry_name);
 
-	const unsigned int length = path_length + entry_name_length + 1;
+	const unsigned int length = path_length + 1 + entry_name_length;
 
 	char *const fullpath = malloc( length * sizeof( *fullpath ) + 1 );
 
@@ -127,7 +103,7 @@ void ReadFile(const char *const path)
 	if (!IsValidFile(file)) { return; }
 
 	const char *const file_extension = GetFileExtension(path);
-	printf("File Extension = %s\n", file_extension);
+	printf("[FILE EXTENSION] = %s\n", file_extension);
 
 	free(file_extension);
 }
@@ -138,7 +114,7 @@ FILE * GetFile(const char *const path, const char *const mode)
 	return fopen(path, mode);
 }
 
-// Returns true if the file being read is valid (not NULL) and false otherwise.
+// Returns true if the file handle is valid (not NULL) and false otherwise.
 bool IsValidFile(FILE * file)
 {
 	return file != NULL;
