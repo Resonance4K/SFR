@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include "Application/FileReader.h"
+#include "Application/Extensions.h"
+#include "Application/Readers.h"
 #include "Utility/String.h"
 
 
@@ -105,6 +107,27 @@ void ReadFile(const char *const path)
 	const char *const file_extension = GetFileExtension(path);
 	printf("[FILE EXTENSION] = %s\n", file_extension);
 
+	if (IsFileExtension_JAVA(file_extension))
+	{
+		ReadFile_JAVA(file);
+	}
+	else if (IsFileExtension_C(file_extension))
+	{
+		ReadFile_C(file);
+	}
+	else if (IsFileExtension_CPP(file_extension))
+	{
+		ReadFile_CPP(file);
+	}
+	else if (IsFileExtension_HEADER(file_extension))
+	{
+		ReadFile_HEADER(file);
+	}
+	else if (IsFileExtension_CS(file_extension))
+	{
+		ReadFile_CS(file);
+	}
+
 	free(file_extension);
 }
 
@@ -128,7 +151,10 @@ char * GetFileExtension(const char *const path)
 
 	if (extension_index == -1) { return NULL; }
 
-	return StrSubstr(path, extension_index + 1, strlen(path));
+	char *const extension = StrSubstr(path, extension_index + 1, strlen(path));
+	StrToLowerCase(extension);
+
+	return extension;
 }
 
 // Defined in "FileReader.h".
