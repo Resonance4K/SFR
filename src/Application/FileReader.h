@@ -6,6 +6,9 @@
 #include <stdbool.h>
 
 
+// Initializes the properties of the file reader.
+void InitFileReader(void);
+
 // Reads the directory specified by the path and processes its contents.
 void ReadDirectory(const char *const path);
 

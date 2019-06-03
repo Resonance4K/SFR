@@ -39,7 +39,9 @@ int main(int argc, char ** argv)
 		return EXIT_FAILURE;
 	}
 
+	InitFileReader();
 	ReadDirectory(path);
+
 	DisplayStatistics();
 	
 	return EXIT_SUCCESS;

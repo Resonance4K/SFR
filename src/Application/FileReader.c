@@ -23,6 +23,12 @@ char * GetFileExtension(const char *const path);
 
 
 // Defined in "FileReader.h".
+void InitFileReader(void)
+{
+	InitReaders();
+}
+
+// Defined in "FileReader.h".
 void ReadDirectory(const char *const path)
 {
 	DIR * dir = GetDirectory(path);
