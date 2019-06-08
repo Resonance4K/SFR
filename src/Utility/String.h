@@ -21,7 +21,7 @@ int StrFindFront(const char *const string, const char target);
 int StrFindBack(const char *const string, const char target);
 
 // Extracts the characters of the string between the start index (inclusive) and end index (exclusive).
-// Returns a substring of the string or NULL if there is no valid substring.
+// Returns a substring of the string or an empty string if no valid substring exists.
 // NOTE: This allocates memory on the heap which must be freed after use.
 char * StrSubstr(const char *const string, const unsigned int start, const unsigned int end);
 

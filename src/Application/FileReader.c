@@ -148,13 +148,13 @@ bool IsValidFile(FILE * file)
 	return file != NULL;
 }
 
-// Returns the extension of a file or NULL if no extension exists.
+// Returns the extension of a file or an empty string if no extension exists.
 // NOTE: This returns a string whose memory has been allocated on the heap and must be freed after use.
 char * GetFileExtension(const char *const path)
 {
 	const int extension_index = StrFindBack(path, '.');
 
-	if (extension_index == -1) { return NULL; }
+	if (extension_index == -1) { return ""; }
 
 	char *const extension = StrSubstr(path, extension_index + 1, strlen(path));
 	StrToLowerCase(extension);

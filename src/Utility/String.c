@@ -90,8 +90,8 @@ int StrFindBack(const char *const string, const char target)
 // Defined in "String.h".
 char * StrSubstr(const char *const string, const unsigned int start, const unsigned int end)
 {
-	if (end < start) { return NULL; }
-	if (start > (strlen(string) - 1)) { return NULL; }
+	if (end < start) { return ""; }
+	if (start > (strlen(string) - 1)) { return ""; }
 
 	const unsigned int substr_length = (end > strlen(string) ? (strlen(string) - start) : (end - start));
 
