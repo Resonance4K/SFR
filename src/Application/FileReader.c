@@ -12,12 +12,10 @@
 
 // --- Function Prototypes --- //
 
-DIR * GetDirectory(const char *const path);
 bool IsValidDirectory(DIR * dir);
 char * GetFullPath(const char *const path, const char *const entry_name);
 
 void ReadFile(const char *const path);
-FILE * GetFile(const char *const path, const char *const mode);
 bool IsValidFile(FILE * file);
 char * GetFileExtension(const char *const path);
 
@@ -31,9 +29,13 @@ void InitFileReader(void)
 // Defined in "FileReader.h".
 void ReadDirectory(const char *const path)
 {
-	DIR * dir = GetDirectory(path);
+	DIR * dir = opendir(path);
 
-	if (!IsValidDirectory(dir)) { return; }
+	if (!IsValidDirectory(dir))
+	{
+		closedir(dir);
+		return;
+	}
 	
 	struct dirent * ent;
 
@@ -46,7 +48,6 @@ void ReadDirectory(const char *const path)
 		if (*entry_name == '.') { continue; }
 
 		const char *const fullpath = GetFullPath(path, entry_name);
-		
 		printf("[PATH] %s\n", fullpath);
 
 		if (entry_type == DT_DIR)
@@ -64,12 +65,6 @@ void ReadDirectory(const char *const path)
 	closedir(dir);
 }
 
-// Returns the directory handle of the directory specified by the path or NULL if the directory cannot be opened.
-DIR * GetDirectory(const char *const path)
-{
-	return opendir(path);
-}
-
 // Returns true if the directory handle is valid (not NULL) and false otherwise.
 bool IsValidDirectory(DIR * dir)
 {
@@ -79,9 +74,13 @@ bool IsValidDirectory(DIR * dir)
 // Defined in "FileReader.h".
 bool IsValidDirectoryPath(const char *const path)
 {
-	DIR * dir = GetDirectory(path);
+	DIR * dir = opendir(path);
 
-	return IsValidDirectory(dir);
+	const bool is_path_valid = IsValidDirectory(dir);
+
+	closedir(dir);
+
+	return is_path_valid;
 }
 
 // Returns the full path resulting from a concatenation of the path and entry name variables.
@@ -106,9 +105,13 @@ char * GetFullPath(const char *const path, const char *const entry_name)
 // Reads a file specified by the path and processes it if it is a supported source file.
 void ReadFile(const char *const path)
 {
-	FILE * file = GetFile(path, "r");
+	FILE * file = fopen(path, "r");
 
-	if (!IsValidFile(file)) { return; }
+	if (!IsValidFile(file))
+	{
+		fclose(file);
+		return;
+	}
 
 	const char *const file_extension = GetFileExtension(path);
 	printf("[FILE EXTENSION] = %s\n", file_extension);
@@ -135,12 +138,8 @@ void ReadFile(const char *const path)
 	}
 
 	free(file_extension);
-}
 
-// Returns the file handle of the file specified by the path in the specified mode or NULL if the file cannot be opened.
-FILE * GetFile(const char *const path, const char *const mode)
-{
-	return fopen(path, mode);
+	fclose(file);
 }
 
 // Returns true if the file handle is valid (not NULL) and false otherwise.
