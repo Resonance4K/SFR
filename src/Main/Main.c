@@ -9,7 +9,9 @@
 
 // --- Function Prototypes --- //
 
+bool SourceFileReader(int argc, char ** argv);
 bool IsValidArgumentCount(int argc);
+
 void PrintArguments(int argc, char ** argv);
 
 
@@ -18,33 +20,46 @@ void PrintArguments(int argc, char ** argv);
 #define TOTAL_DIRECTORY_COUNT    1
 
 
-// The entry point of the program.
+// The entry point of the program executed by the Operating System (OS).
 int main(int argc, char ** argv)
 {
+	const int program_status = SourceFileReader(argc, argv) ? EXIT_SUCCESS : EXIT_FAILURE;
+
+	printf("Program terminated with status: %s\n", program_status == EXIT_SUCCESS ? "SUCCESS" : "FAILURE");
+	printf("\n");
+
+	return program_status;
+}
+
+// The entry point of the program executed by the user.
+// Returns true if the program executed successfully and false otherwise.
+bool SourceFileReader(int argc, char ** argv)
+{
+	StrReplaceAll(*(argv + 1), '\\', '/');
+
 	PrintArguments(argc, argv);
 
 	if (!IsValidArgumentCount(argc))
 	{
 		printf("[ERROR] Expected %i argument but instead received %i arguments!\n", TOTAL_DIRECTORY_COUNT, (argc - 1));
-		return EXIT_FAILURE;
+		return false;
 	}
-
-	StrReplaceAll(*(argv + 1), '\\', '/');
 
 	const char *const path = *(argv + 1);
 
 	if (!IsValidDirectoryPath(path))
 	{
 		printf("[ERROR] The path specified is not a valid directory: %s\n", path);
-		return EXIT_FAILURE;
+		return false;
 	}
 
 	InitFileReader();
+
 	ReadDirectory(path);
 
 	DisplayStatistics();
-	
-	return EXIT_SUCCESS;
+
+	return true;
 }
 
 // Checks the number of arguments provided to the program by the user.
