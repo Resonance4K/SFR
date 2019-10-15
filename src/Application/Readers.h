@@ -6,24 +6,6 @@
 #include <stdio.h>
 
 
-// --- Constant Definitions --- //
-
-#define TOTAL_FILES_SUPPORTED    5
-
-
-// Structure that stores statistical information about the files being read.
-struct FILE_DATA
-{
-	const char * file_type;
-	unsigned long code_lines;
-	unsigned long empty_lines;
-	unsigned long doc_lines;
-	unsigned long file_count;
-};
-
-// Array to store the file data information for each file type.
-extern struct FILE_DATA data[];
-
 // Initializes the properties of the readers.
 void InitReaders(void);
 
@@ -41,6 +23,9 @@ void ReadFile_HEADER(FILE * file);
 
 // Reads a source file that is written in C#.
 void ReadFile_CS(FILE * file);
+
+// Displays the statistics of the files that the readers have read.
+void DisplayReaderStatistics(void);
 
 
 #endif
