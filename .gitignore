@@ -10,4 +10,7 @@ bin-int/
 dir.cmd
 SFR.VC.db
 SFR.VC.VC.opendb
+SFR.sln
+SFR.vcxproj
+SFR.vcxproj.filters
 SFR.vcxproj.user
