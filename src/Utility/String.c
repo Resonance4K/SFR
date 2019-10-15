@@ -1,6 +1,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "Utility/String.h"
 
@@ -90,8 +91,8 @@ int StrFindBack(const char *const string, const char target)
 // Defined in "String.h".
 char * StrSubstr(const char *const string, const unsigned int start, const unsigned int end)
 {
-	if (end < start) { return ""; }
-	if (start > (strlen(string) - 1)) { return ""; }
+	if (end < start) { return EMPTY_STRING; }
+	if (start > (strlen(string) - 1)) { return EMPTY_STRING; }
 
 	const unsigned int substr_length = (end > strlen(string) ? (strlen(string) - start) : (end - start));
 
@@ -104,4 +105,32 @@ char * StrSubstr(const char *const string, const unsigned int start, const unsig
 	*(substr + substr_length) = '\0';
 
 	return substr;
+}
+
+// Defined in "String.h".
+bool StrStartsWith(const char *const string, const unsigned int count, ...)
+{
+	va_list args;
+	va_start(args, count);
+
+	bool result = false;
+	unsigned int index = 0;
+
+	while (index < count)
+	{
+		const char *const target = va_arg(args, char *);
+		const char *const substr_pointer = strstr(string, target);
+
+		if (substr_pointer != NULL && substr_pointer == string)
+		{
+			result = true;
+			break;
+		}
+
+		index++;
+	}
+
+	va_end(args);
+
+	return result;
 }

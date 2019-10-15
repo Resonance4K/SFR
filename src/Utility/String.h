@@ -3,6 +3,14 @@
 #define SFR_STRING_H
 
 
+#include <stdbool.h>
+
+
+// --- Constant Definitions --- //
+
+#define EMPTY_STRING    ""
+
+
 // Modifies the string by replacing all target characters with the replacement character.
 void StrReplaceAll(char *const string, const char target, const char replacement);
 
@@ -24,6 +32,10 @@ int StrFindBack(const char *const string, const char target);
 // Returns a substring of the string or an empty string if no valid substring exists.
 // NOTE: This allocates memory on the heap which must be freed after use.
 char * StrSubstr(const char *const string, const unsigned int start, const unsigned int end);
+
+// Returns true if the string starts with the specified target strings and false otherwise.
+// NOTE: The count variable represents the number of target strings specified.
+bool StrStartsWith(const char *const string, const unsigned int count, ...);
 
 
 #endif

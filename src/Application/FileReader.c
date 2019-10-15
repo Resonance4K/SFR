@@ -48,7 +48,6 @@ void ReadDirectory(const char *const path)
 		if (*entry_name == '.') { continue; }
 
 		const char *const fullpath = GetFullPath(path, entry_name);
-		printf("[PATH] %s\n", fullpath);
 
 		if (entry_type == DT_DIR)
 		{
@@ -114,7 +113,6 @@ void ReadFile(const char *const path)
 	}
 
 	const char *const file_extension = GetFileExtension(path);
-	printf("[FILE EXTENSION] = %s\n", file_extension);
 
 	if (IsFileExtension_JAVA(file_extension))
 	{
@@ -154,7 +152,7 @@ char * GetFileExtension(const char *const path)
 {
 	const int extension_index = StrFindBack(path, '.');
 
-	if (extension_index == -1) { return ""; }
+	if (extension_index == -1) { return EMPTY_STRING; }
 
 	char *const extension = StrSubstr(path, extension_index + 1, strlen(path));
 	StrToLowerCase(extension);
@@ -165,5 +163,5 @@ char * GetFileExtension(const char *const path)
 // Defined in "FileReader.h".
 void DisplayStatistics(void)
 {
-
+	DisplayReaderStatistics();
 }
