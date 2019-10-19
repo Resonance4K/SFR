@@ -24,11 +24,11 @@ char * GetLine(FILE * file);
 
 #define TOTAL_FILES_SUPPORTED    5
 
-#define JAVA        0
-#define C           1
-#define CPP         2
-#define HEADER      3
-#define CS          4
+#define JAVA      0
+#define C         1
+#define CPP       2
+#define HEADER    3
+#define CS        4
 
 
 // Structure that stores statistical information about the files being read.
@@ -38,6 +38,7 @@ struct FILE_DATA
 	unsigned long physical_lines;
 	unsigned long blank_lines;
 	unsigned long comment_lines;
+	unsigned long total_lines;
 	unsigned long file_count;
 };
 
@@ -47,19 +48,11 @@ struct FILE_DATA data[TOTAL_FILES_SUPPORTED];
 // Defined in "Readers.h".
 void InitReaders(void)
 {
-	data[JAVA].file_type = "Java";
-	data[C].file_type = "C";
-	data[CPP].file_type = "C++";
-	data[HEADER].file_type = "C/C++ Header";
-	data[CS].file_type = "C#";
-
-	for (int i = 0; i < TOTAL_FILES_SUPPORTED; i++)
-	{
-		data[i].physical_lines = 0;
-		data[i].blank_lines = 0;
-		data[i].comment_lines = 0;
-		data[i].file_count = 0;
-	}
+	data[JAVA]   = (struct FILE_DATA) { "Java",         0L, 0L, 0L, 0L, 0L };
+	data[C]      = (struct FILE_DATA) { "C",            0L, 0L, 0L, 0L, 0L };
+	data[CPP]    = (struct FILE_DATA) { "C++",          0L, 0L, 0L, 0L, 0L };
+	data[HEADER] = (struct FILE_DATA) { "C/C++ Header", 0L, 0L, 0L, 0L, 0L };
+	data[CS]     = (struct FILE_DATA) { "C#",           0L, 0L, 0L, 0L, 0L };
 }
 
 // Defined in "Readers.h".
@@ -119,6 +112,7 @@ bool ProcessBlankLine(const char *const line, const unsigned int file_type)
 	if (*line == '\0')
 	{
 		data[file_type].blank_lines++;
+		data[file_type].total_lines++;
 		return true;
 	}
 
@@ -131,6 +125,7 @@ bool ProcessCommentLine(const char *const line, const unsigned int file_type)
 	if (StrStartsWith(line, 4, "//", "/*", "*", "*/"))
 	{
 		data[file_type].comment_lines++;
+		data[file_type].total_lines++;
 		return true;
 	}
 
@@ -141,6 +136,7 @@ bool ProcessCommentLine(const char *const line, const unsigned int file_type)
 void ProcessPhysicalLine(const unsigned int file_type)
 {
 	data[file_type].physical_lines++;
+	data[file_type].total_lines++;
 }
 
 // Increments the file count after a file has been fully processed.
@@ -160,6 +156,7 @@ void DisplayReaderStatistics(void)
 		printf("Physical Lines = %d\n", data[i].physical_lines);
 		printf("Blank Lines = %d\n", data[i].blank_lines);
 		printf("Comment Lines = %d\n", data[i].comment_lines);
+		printf("Total Lines = %d\n", data[i].total_lines);
 		printf("File Count = %d\n", data[i].file_count);
 		printf("\n");
 	}
