@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 
 #include "Application/Readers.h"
 #include "Utility/String.h"
+#include "Utility/Display.h"
 
 
 // --- Function Prototypes ---//
@@ -16,19 +18,28 @@ bool ProcessCommentLine(const char *const line, const unsigned int file_type);
 void ProcessPhysicalLine(const unsigned int file_type);
 void IncrementFileCount(const unsigned int file_type);
 
+void CalculateDataTotals(void);
+unsigned int * CalculateColumnWidths(void);
+unsigned int CalculateTotalTableWidth(const unsigned int *const column_widths);
+unsigned int CalculateNumberLength(const unsigned long number);
+
 bool IsEOF(FILE * file);
 char * GetLine(FILE * file);
 
 
 // --- Constant Definitions --- //
 
-#define TOTAL_FILES_SUPPORTED    5
+#define STAT_NUMBER_LIMIT        50000000UL
 
-#define JAVA      0
-#define C         1
-#define CPP       2
-#define HEADER    3
-#define CS        4
+#define TOTAL_FILES_SUPPORTED    5
+#define TOTAL_STATS_SUPPORTED    6
+
+#define TOTALS        0
+#define JAVA          1
+#define C             2
+#define CPP           3
+#define HEADER        4
+#define CS            5
 
 
 // Structure that stores statistical information about the files being read.
@@ -43,16 +54,29 @@ struct FILE_DATA
 };
 
 // Array to store the file data information for each file type.
-struct FILE_DATA data[TOTAL_FILES_SUPPORTED];
+struct FILE_DATA data[TOTAL_FILES_SUPPORTED + 1];
+
+// Array that stores the names of the recorded statistics.
+char * stat_names[TOTAL_STATS_SUPPORTED] =
+{
+	"",
+	"Physical Lines",
+	"Blank Lines",
+	"Comment Lines",
+	"Total Lines",
+	"File Count"
+};
 
 // Defined in "Readers.h".
 void InitReaders(void)
 {
-	data[JAVA]   = (struct FILE_DATA) { "Java",         0L, 0L, 0L, 0L, 0L };
-	data[C]      = (struct FILE_DATA) { "C",            0L, 0L, 0L, 0L, 0L };
-	data[CPP]    = (struct FILE_DATA) { "C++",          0L, 0L, 0L, 0L, 0L };
-	data[HEADER] = (struct FILE_DATA) { "C/C++ Header", 0L, 0L, 0L, 0L, 0L };
-	data[CS]     = (struct FILE_DATA) { "C#",           0L, 0L, 0L, 0L, 0L };
+	data[TOTALS] = (struct FILE_DATA) { "Total",        0UL, 0UL, 0UL, 0UL, 0UL };
+
+	data[JAVA]   = (struct FILE_DATA) { "Java",         0UL, 0UL, 0UL, 0UL, 0UL };
+	data[C]      = (struct FILE_DATA) { "C",            0UL, 0UL, 0UL, 0UL, 0UL };
+	data[CPP]    = (struct FILE_DATA) { "C++",          0UL, 0UL, 0UL, 0UL, 0UL };
+	data[HEADER] = (struct FILE_DATA) { "C/C++ Header", 0UL, 0UL, 0UL, 0UL, 0UL };
+	data[CS]     = (struct FILE_DATA) { "C#",           0UL, 0UL, 0UL, 0UL, 0UL };
 }
 
 // Defined in "Readers.h".
@@ -111,8 +135,12 @@ bool ProcessBlankLine(const char *const line, const unsigned int file_type)
 {
 	if (*line == '\0')
 	{
-		data[file_type].blank_lines++;
-		data[file_type].total_lines++;
+		if (data[file_type].blank_lines < STAT_NUMBER_LIMIT)
+		{
+			data[file_type].blank_lines++;
+			data[file_type].total_lines++;
+		}
+
 		return true;
 	}
 
@@ -124,8 +152,12 @@ bool ProcessCommentLine(const char *const line, const unsigned int file_type)
 {
 	if (StrStartsWith(line, 4, "//", "/*", "*", "*/"))
 	{
-		data[file_type].comment_lines++;
-		data[file_type].total_lines++;
+		if (data[file_type].comment_lines < STAT_NUMBER_LIMIT)
+		{
+			data[file_type].comment_lines++;
+			data[file_type].total_lines++;
+		}
+
 		return true;
 	}
 
@@ -135,31 +167,132 @@ bool ProcessCommentLine(const char *const line, const unsigned int file_type)
 // Processes a line read from the file as a physical line.
 void ProcessPhysicalLine(const unsigned int file_type)
 {
-	data[file_type].physical_lines++;
-	data[file_type].total_lines++;
+	if (data[file_type].physical_lines < STAT_NUMBER_LIMIT)
+	{
+		data[file_type].physical_lines++;
+		data[file_type].total_lines++;
+	}
 }
 
 // Increments the file count after a file has been fully processed.
 void IncrementFileCount(const unsigned int file_type)
 {
-	data[file_type].file_count++;
+	if (data[file_type].file_count < STAT_NUMBER_LIMIT)
+	{
+		data[file_type].file_count++;
+	}
 }
 
 // Defined in "Readers.h".
 void DisplayReaderStatistics(void)
 {
-	for (unsigned int i = 0; i < TOTAL_FILES_SUPPORTED; i++)
-	{
-		if (data[i].file_count == 0) { continue; }
+	CalculateDataTotals();
 
-		printf("File Type = %s\n", data[i].file_type);
-		printf("Physical Lines = %d\n", data[i].physical_lines);
-		printf("Blank Lines = %d\n", data[i].blank_lines);
-		printf("Comment Lines = %d\n", data[i].comment_lines);
-		printf("Total Lines = %d\n", data[i].total_lines);
-		printf("File Count = %d\n", data[i].file_count);
+	const unsigned int *const column_widths = CalculateColumnWidths();
+	const unsigned int table_width = CalculateTotalTableWidth(column_widths);
+
+	DisplayDefaultDivider(table_width);
+	for (unsigned int i = 0; i < TOTAL_STATS_SUPPORTED; i++)
+	{
+		DisplayStrWithPadding(*(stat_names + i), *(column_widths + i));
+	}
+	printf("\n");
+	DisplayDefaultDivider(table_width);
+	for (unsigned int i = 1; i < TOTAL_FILES_SUPPORTED + 1; i++)
+	{
+		DisplayStrWithPadding(data[i].file_type, *column_widths);
+		DisplayNumberWithPadding(data[i].physical_lines, *(column_widths + 1));
+		DisplayNumberWithPadding(data[i].blank_lines, *(column_widths + 2));
+		DisplayNumberWithPadding(data[i].comment_lines, *(column_widths + 3));
+		DisplayNumberWithPadding(data[i].total_lines, *(column_widths + 4));
+		DisplayNumberWithPadding(data[i].file_count, *(column_widths + 5));
 		printf("\n");
 	}
+	DisplayDefaultDivider(table_width);
+	DisplayStrWithPadding(data[TOTALS].file_type, *column_widths);
+	DisplayNumberWithPadding(data[TOTALS].physical_lines, *(column_widths + 1));
+	DisplayNumberWithPadding(data[TOTALS].blank_lines, *(column_widths + 2));
+	DisplayNumberWithPadding(data[TOTALS].comment_lines, *(column_widths + 3));
+	DisplayNumberWithPadding(data[TOTALS].total_lines, *(column_widths + 4));
+	DisplayNumberWithPadding(data[TOTALS].file_count, *(column_widths + 5));
+	printf("\n");
+	DisplayDefaultDivider(table_width);
+	printf("\n");
+
+	free(column_widths);
+}
+
+// Calculates the totals of the file data information for each statistic for all file types.
+void CalculateDataTotals(void)
+{
+	for (unsigned int i = 1; i < TOTAL_FILES_SUPPORTED + 1; i++)
+	{
+		data[TOTALS].physical_lines += data[i].physical_lines;
+		data[TOTALS].blank_lines += data[i].blank_lines;
+		data[TOTALS].comment_lines += data[i].comment_lines;
+		data[TOTALS].total_lines += data[i].total_lines;
+		data[TOTALS].file_count += data[i].file_count;
+	}
+}
+
+// Returns an array of calculated optimal column widths for the recorded statistics.
+// NOTE: This allocates memory on the heap which must be freed after use.
+unsigned int * CalculateColumnWidths(void)
+{
+	unsigned int *const column_widths = malloc( TOTAL_STATS_SUPPORTED * sizeof( *column_widths ) );
+
+	for (unsigned int i = 0; i < TOTAL_STATS_SUPPORTED; i++)
+	{
+		*(column_widths + i) = strlen(*(stat_names + i));
+	}
+
+	for (unsigned int i = 0; i < TOTAL_FILES_SUPPORTED + 1; i++)
+	{
+		const unsigned int file_type_width = strlen(data[i].file_type);
+		if (file_type_width > *column_widths) { *column_widths = file_type_width; }
+	}
+
+	const unsigned int physical_line_width = CalculateNumberLength(data[TOTALS].physical_lines);
+	if (physical_line_width > *(column_widths + 1)) { *(column_widths + 1) = physical_line_width; }
+
+	const unsigned int blank_line_width = CalculateNumberLength(data[TOTALS].blank_lines);
+	if (blank_line_width > *(column_widths + 2)) { *(column_widths + 2) = blank_line_width; }
+
+	const unsigned int comment_line_width = CalculateNumberLength(data[TOTALS].comment_lines);
+	if (comment_line_width > *(column_widths + 3)) { *(column_widths + 3) = comment_line_width; }
+
+	const unsigned int total_line_width = CalculateNumberLength(data[TOTALS].total_lines);
+	if (total_line_width > *(column_widths + 4)) { *(column_widths + 4) = total_line_width; }
+
+	const unsigned int file_count_width = CalculateNumberLength(data[TOTALS].file_count);
+	if (file_count_width > *(column_widths + 5)) { *(column_widths + 5) = file_count_width; }
+
+	const unsigned int column_padding = 3;
+	for (unsigned int i = 0; i < TOTAL_STATS_SUPPORTED; i++)
+	{
+		*(column_widths + i) += column_padding;
+	}
+
+	return column_widths;
+}
+
+// Returns the total sum of all column widths.
+unsigned int CalculateTotalTableWidth(const unsigned int *const column_widths)
+{
+	unsigned int total_width = 0;
+
+	for (unsigned int i = 0; i < TOTAL_STATS_SUPPORTED; i++)
+	{
+		total_width += column_widths[i];
+	}
+
+	return total_width;
+}
+
+// Calculates the amount of digits in the number.
+unsigned int CalculateNumberLength(const unsigned long number)
+{
+	return (number > 0 ? log10(number) + 1 : 1);
 }
 
 // Returns true if the file has been fully processed.
