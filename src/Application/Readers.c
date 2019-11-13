@@ -18,6 +18,8 @@ bool ProcessCommentLine(const char *const line, const unsigned int file_type);
 void ProcessPhysicalLine(const unsigned int file_type);
 void IncrementFileCount(const unsigned int file_type);
 
+void DisplayDataEntry(const unsigned int index, const unsigned int *const column_widths);
+
 void CalculateDataTotals(void);
 unsigned int * CalculateColumnWidths(void);
 unsigned int CalculateTotalTableWidth(const unsigned int *const column_widths);
@@ -200,26 +202,29 @@ void DisplayReaderStatistics(void)
 	DisplayDefaultDivider(table_width);
 	for (unsigned int i = 1; i < TOTAL_FILES_SUPPORTED + 1; i++)
 	{
-		DisplayStrWithPadding(data[i].file_type, *column_widths);
-		DisplayNumberWithPadding(data[i].physical_lines, *(column_widths + 1));
-		DisplayNumberWithPadding(data[i].blank_lines, *(column_widths + 2));
-		DisplayNumberWithPadding(data[i].comment_lines, *(column_widths + 3));
-		DisplayNumberWithPadding(data[i].total_lines, *(column_widths + 4));
-		DisplayNumberWithPadding(data[i].file_count, *(column_widths + 5));
+		if (data[i].file_count == 0) { continue; }
+
+		DisplayDataEntry(i, column_widths);
 		printf("\n");
 	}
 	DisplayDefaultDivider(table_width);
-	DisplayStrWithPadding(data[TOTALS].file_type, *column_widths);
-	DisplayNumberWithPadding(data[TOTALS].physical_lines, *(column_widths + 1));
-	DisplayNumberWithPadding(data[TOTALS].blank_lines, *(column_widths + 2));
-	DisplayNumberWithPadding(data[TOTALS].comment_lines, *(column_widths + 3));
-	DisplayNumberWithPadding(data[TOTALS].total_lines, *(column_widths + 4));
-	DisplayNumberWithPadding(data[TOTALS].file_count, *(column_widths + 5));
+	DisplayDataEntry(TOTALS, column_widths);
 	printf("\n");
 	DisplayDefaultDivider(table_width);
 	printf("\n");
 
 	free(column_widths);
+}
+
+// Displays the data entry at the specified index.
+void DisplayDataEntry(const unsigned int index, const unsigned int *const column_widths)
+{
+	DisplayStrWithPadding(data[index].file_type, *column_widths);
+	DisplayNumberWithPadding(data[index].physical_lines, *(column_widths + 1));
+	DisplayNumberWithPadding(data[index].blank_lines, *(column_widths + 2));
+	DisplayNumberWithPadding(data[index].comment_lines, *(column_widths + 3));
+	DisplayNumberWithPadding(data[index].total_lines, *(column_widths + 4));
+	DisplayNumberWithPadding(data[index].file_count, *(column_widths + 5));
 }
 
 // Calculates the totals of the file data information for each statistic for all file types.
