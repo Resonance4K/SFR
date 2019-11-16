@@ -26,7 +26,7 @@ bool IsFileExtension_CPP(const char *const extension)
 // Defined in "Extensions.h".
 bool IsFileExtension_HEADER(const char *const extension)
 {
-	return strcmp(extension, "h") == 0;
+	return (strcmp(extension, "h") == 0 || strcmp(extension, "hpp") == 0);
 }
 
 // Defined in "Extensions.h".
