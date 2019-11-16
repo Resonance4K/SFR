@@ -2,9 +2,7 @@
 #ifndef SFR_READERS_H
 #define SFR_READERS_H
 
-
 #include <stdio.h>
-
 
 // Initializes the properties of the readers.
 void InitReaders(void);
@@ -26,6 +24,5 @@ void ReadFile_CS(FILE * file);
 
 // Displays the statistics of the files that the readers have read.
 void DisplayReaderStatistics(void);
-
 
 #endif

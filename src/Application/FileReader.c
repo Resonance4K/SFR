@@ -10,7 +10,6 @@
 #include "Utility/String.h"
 
 
-// --- Function Prototypes --- //
 
 bool IsValidDirectory(DIR * dir);
 char * GetFullPath(const char *const path, const char *const entry_name);
@@ -18,6 +17,7 @@ char * GetFullPath(const char *const path, const char *const entry_name);
 void ReadFile(const char *const path);
 bool IsValidFile(FILE * file);
 char * GetFileExtension(const char *const path);
+
 
 
 // Defined in "FileReader.h".

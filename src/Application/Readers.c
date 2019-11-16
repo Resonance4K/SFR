@@ -9,7 +9,6 @@
 #include "Utility/Display.h"
 
 
-// --- Function Prototypes ---//
 
 void ReadFile_GENERIC(FILE * file, const unsigned int file_type);
 
@@ -29,7 +28,6 @@ bool IsEOF(FILE * file);
 char * GetLine(FILE * file);
 
 
-// --- Constant Definitions --- //
 
 #define STAT_NUMBER_LIMIT        50000000UL
 
@@ -42,6 +40,7 @@ char * GetLine(FILE * file);
 #define CPP           3
 #define HEADER        4
 #define CS            5
+
 
 
 // Structure that stores statistical information about the files being read.

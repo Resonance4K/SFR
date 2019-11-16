@@ -3,6 +3,7 @@
 #include <string.h>
 
 
+
 // Defined in "Display.h".
 void DisplayDivider(const char c, const unsigned int length)
 {

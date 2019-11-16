@@ -4,6 +4,7 @@
 #include "Application/Extensions.h"
 
 
+
 // Defined in "Extensions.h".
 bool IsFileExtension_JAVA(const char *const extension)
 {

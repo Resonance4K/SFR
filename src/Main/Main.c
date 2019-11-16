@@ -7,17 +7,16 @@
 #include "Utility/String.h"
 
 
-// --- Function Prototypes --- //
 
 bool SourceFileReader(int argc, char ** argv);
 bool IsValidArgumentCount(int argc);
 
-void PrintArguments(int argc, char ** argv);
+void DisplayDirectory(const char *const path);
 
 
-// --- Constant Definitions --- //
 
-#define TOTAL_DIRECTORY_COUNT    1
+#define TOTAL_ARGUMENT_COUNT    1
+
 
 
 // The entry point of the program executed by the Operating System (OS).
@@ -37,11 +36,9 @@ bool SourceFileReader(int argc, char ** argv)
 {
 	StrReplaceAll(*(argv + 1), '\\', '/');
 
-	PrintArguments(argc, argv);
-
 	if (!IsValidArgumentCount(argc))
 	{
-		printf("[ERROR] Expected %i argument but instead received %i arguments!\n", TOTAL_DIRECTORY_COUNT, (argc - 1));
+		printf("[ERROR] Expected %i argument but instead received %i arguments!\n", TOTAL_ARGUMENT_COUNT, (argc - 1));
 		return false;
 	}
 
@@ -53,6 +50,8 @@ bool SourceFileReader(int argc, char ** argv)
 		return false;
 	}
 
+	DisplayDirectory(path);
+
 	InitFileReader();
 
 	ReadDirectory(path);
@@ -62,33 +61,17 @@ bool SourceFileReader(int argc, char ** argv)
 	return true;
 }
 
-// Checks the number of arguments provided to the program by the user.
-// Returns true if it equals the expected number of arguments and false otherwise.
+// Returns true if the number of arguments provided equals the expected argument count and false otherwise.
 bool IsValidArgumentCount(int argc)
 {
-	return (argc - 1) == TOTAL_DIRECTORY_COUNT;
+	return (argc - 1) == TOTAL_ARGUMENT_COUNT;
 }
 
-// Prints the argument count and argument vector.
-void PrintArguments(int argc, char ** argv)
+// Displays the directory path that the program will read from.
+void DisplayDirectory(const char *const path)
 {
 	printf("\n");
-	printf("ARGUMENTS:\n");
-	printf("----------------------------------------\n");
-	printf("\n");
-
-	printf("argc:\n");
-	printf("\t%i\n", (argc - 1));
-
-	printf("\n");
-
-	printf("argv:\n");
-	for (int i = 1; i < argc; i++)
-	{
-		printf("\t%s\n", *(argv + i));
-	}
-
-	printf("\n");
-	printf("----------------------------------------\n");
+	printf("Reading directory:\n");
+	printf("%s\n", path);
 	printf("\n");
 }

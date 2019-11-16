@@ -2,7 +2,6 @@
 #ifndef SFR_DISPLAY_H
 #define SFR_DISPLAY_H
 
-
 // Displays a divider consisting of the specified character up to the specified length.
 void DisplayDivider(const char c, const unsigned int length);
 
@@ -17,6 +16,5 @@ void DisplayStrWithPadding(const char *const str, const unsigned int width);
 
 // Displays a number with whitespace padding if the length is less than the width specified.
 void DisplayNumberWithPadding(const unsigned long number, const unsigned int width);
-
 
 #endif
