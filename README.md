@@ -6,6 +6,7 @@ A command line source file reader written in C.
 ## Table of Contents
 
 - [Screenshots](#screenshots)
+- [Supported Platforms](#supported-platforms)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Supported File Types and Extensions](#supported-file-types-and-extensions)
@@ -20,6 +21,13 @@ A command line source file reader written in C.
 	<img src="/screenshots/output.png?raw=true" alt="Output" />
 </p>
 
+## Supported Platforms
+
+The program is currently being supported on the following platforms:
+
+- Windows
+- Linux
+
 ## Installation
 
 _**Note:** The GNU Compiler Collection (GCC) is required to run the provided makefile for program compilation._
@@ -31,7 +39,11 @@ Download the latest version of the program source from the repository's [release
 If we define the installation directory of the program as
 
 ```
+[WINDOWS]
 C:/SFR
+
+[LINUX]
+~/SFR
 ```
 
 and we compile the program by running the provided makefile in a command prompt (after navigating to the above directory) with
@@ -43,7 +55,11 @@ make build
 then an executable binary file should have been created with a directory path of
 
 ```
+[WINDOWS]
 C:/SFR/bin/SFR
+
+[LINUX]
+~/SFR/bin/SFR
 ```
 
 If the program needs to be recompiled then replace the above `make build` command with `make rebuild` instead.
@@ -57,19 +73,31 @@ _**Note:** This section only applies once the program has been compiled and an e
 If we define the installation directory of the program as
 
 ```
+[WINDOWS]
 C:/SFR
+
+[LINUX]
+~/SFR
 ```
 
 and if we define the directory path that should be read by the program as
 
 ```
+[WINDOWS]
 C:/TestDir
+
+[LINUX]
+~/TestDir
 ```
 
 then the program can be invoked by running the following in a command prompt where the first part points to the executable binary file followed by any input parameters
 
 ```
+[WINDOWS]
 "C:/SFR/bin/SFR" "C:/TestDir"
+
+[LINUX]
+~/SFR/bin/SFR ~/TestDir
 ```
 
 As shown above, the program accepts only one input parameter corresponding to the directory path that should be read.
