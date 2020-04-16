@@ -3,6 +3,7 @@ COMPILER := gcc
 COMPILER_STANDARD := -std=c99
 COMPILER_FLAGS := -pedantic -Wall -Wextra
 LINKER_FLAGS :=
+LIBRARIES := -lm
 
 SRC_DIR := src
 INC_DIR := src
@@ -44,7 +45,7 @@ rebuild: clean build
 $(EXEC_FILE): $(OBJ_FILES)
 	@ if [ ! -d $(@D) ]; then echo "Creating directory:" $(@D); mkdir -p $(@D); fi
 	@ echo "Creating executable:" $@
-	@ $(COMPILER) $(LINKER_FLAGS) $^ -o $@
+	@ $(COMPILER) $(LINKER_FLAGS) $^ -o $@ $(LIBRARIES)
 
 $(OBJ_DIR)/%.$(OBJ_EXT): $(SRC_DIR)/%.$(SRC_EXT) $(HEADER_FILES)
 	@ if [ ! -d $(@D) ]; then echo "Creating directory:" $(@D); mkdir -p $(@D); fi

@@ -48,8 +48,7 @@ void DisplayNumberWithPadding(const unsigned long number, const unsigned int wid
 {
 	char str[16];
 
-	// The "%u" specifier represents an unsigned decimal integer
-	snprintf(str, 16, "%u", number);
+	snprintf(str, 16, "%lu", number);
 	
 	DisplayStrWithPadding(str, width);
 }

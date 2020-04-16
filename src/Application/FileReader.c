@@ -1,4 +1,7 @@
 
+// Provides the definitions for the DT_DIR and DT_REG constants on Linux systems
+#define _DEFAULT_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
