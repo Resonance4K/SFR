@@ -358,7 +358,10 @@ char * GetLine(FILE * file)
 
 	while ((cInt = fgetc(file)) != EOF)
 	{
-		if (cInt == '\n' || cInt == '\r') { break; }
+		// Stop processing when the LF line ending character is found
+		if (cInt == '\n') { break; }
+		// Skip processing when the CR line ending character is found
+		if (cInt == '\r') { continue; }
 
 		if (!leading_whitespace_processed)
 		{
