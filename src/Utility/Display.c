@@ -11,8 +11,6 @@ void DisplayDivider(const char c, const unsigned int length)
 	{
 		printf("%c", c);
 	}
-
-	printf("\n");
 }
 
 // Defined in "Display.h".

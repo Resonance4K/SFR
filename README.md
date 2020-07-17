@@ -46,7 +46,7 @@ C:/SFR
 ~/SFR
 ```
 
-and we compile the program by running the provided makefile in a command prompt (after navigating to the above directory) with
+and we compile the program by running the provided makefile in a command prompt or terminal (after navigating to the above directory) with
 
 ```
 make build
@@ -90,24 +90,44 @@ C:/TestDir
 ~/TestDir
 ```
 
-then the program can be invoked by running the following in a command prompt where the first part points to the executable binary file followed by any input parameters
+then the program can be invoked by running one of the following commands in a command prompt or terminal where the first part points to the executable binary file followed by any input parameters
 
 ```
 [WINDOWS]
-"C:/SFR/bin/SFR" "C:/TestDir"
+1.  C:/SFR/bin/SFR C:/TestDir
+2.  C:/SFR/bin/SFR C:/TestDir d:5
 
 [LINUX]
-~/SFR/bin/SFR ~/TestDir
+1.  ~/SFR/bin/SFR ~/TestDir
+2.  ~/SFR/bin/SFR ~/TestDir d:5
 ```
 
-As shown above, the program accepts only one input parameter corresponding to the directory path that should be read.
+As shown above, the program accepts a minimum and maximum of 1 and 2 input parameters respecfully. The first command represents all mandatory input parameters where as the second command represents all mandatory and optional input parameters.
+
+The mandatory input parameters must be specified in order and are as follows:
+
+| Position | Flags | Default Value | Name           |
+|:--------:|:-----:|:-------------:|:---------------|
+| 1        |       |               | Directory Path |
+
+The optional input parameters can be specified in any order with the exception that they must be specified after the mandatory input parameters and are as follows:
+
+| Flags | Default Value | Name                      |
+|:-----:|:-------------:|:--------------------------|
+| d     | 12            | Directory Traversal Depth |
+
+If an input parameter uses flags then their associated value is separated by a colon in the format
+
+```
+FLAGS:VALUE
+```
 
 ## Supported File Types and Extensions
 
 The program supports the following file types and their extensions:
 
 | File Type    | File Extension |
-|--------------|----------------|
+|:-------------|:---------------|
 | Java         | .java          |
 | C            | .c             |
 | C++          | .cpp           |
@@ -120,7 +140,7 @@ The program supports the following file types and their extensions:
 _Lines of code that are responsible for executing and assisting the execution of a program._
 
 **Blank Lines**\
-_Lines of code that contain only control characters (no visible characters)._
+_Lines of code that contain only control characters such as LF and CR (no visible characters)._
 
 **Comment Lines**\
 _Lines of code that provide human readable annotations of a program's source code._

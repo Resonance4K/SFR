@@ -192,13 +192,19 @@ void DisplayReaderStatistics(void)
 	const unsigned int *const column_widths = CalculateColumnWidths();
 	const unsigned int table_width = CalculateTotalTableWidth(column_widths);
 
+	printf("\n");
 	DisplayDefaultDivider(table_width);
+	printf("\n");
+
 	for (unsigned int i = 0; i < TOTAL_STATS_SUPPORTED; i++)
 	{
 		DisplayStrWithPadding(*(stat_names + i), *(column_widths + i));
 	}
+
 	printf("\n");
 	DisplayDefaultDivider(table_width);
+	printf("\n");
+
 	for (unsigned int i = 1; i < TOTAL_FILES_SUPPORTED + 1; i++)
 	{
 		if (data[i].file_count == 0) { continue; }
@@ -206,7 +212,9 @@ void DisplayReaderStatistics(void)
 		DisplayDataEntry(i, column_widths);
 		printf("\n");
 	}
+
 	DisplayDefaultDivider(table_width);
+	printf("\n");
 	DisplayDataEntry(TOTALS, column_widths);
 	printf("\n");
 	DisplayDefaultDivider(table_width);
@@ -245,32 +253,58 @@ unsigned int * CalculateColumnWidths(void)
 {
 	unsigned int *const column_widths = malloc( TOTAL_STATS_SUPPORTED * sizeof( *column_widths ) );
 
+	// Set initial column width to equal the length of the column name
 	for (unsigned int i = 0; i < TOTAL_STATS_SUPPORTED; i++)
 	{
 		*(column_widths + i) = strlen(*(stat_names + i));
 	}
 
+	// Calculate the File Type column width
 	for (unsigned int i = 0; i < TOTAL_FILES_SUPPORTED + 1; i++)
 	{
 		const unsigned int file_type_width = strlen(data[i].file_type);
-		if (file_type_width > *column_widths) { *column_widths = file_type_width; }
+		if (file_type_width > *column_widths)
+		{
+			*column_widths = file_type_width;
+		}
 	}
 
+	// Calculate the Physical Lines column width
 	const unsigned int physical_line_width = CalculateNumberLength(data[TOTALS].physical_lines);
-	if (physical_line_width > *(column_widths + 1)) { *(column_widths + 1) = physical_line_width; }
+	if (physical_line_width > *(column_widths + 1))
+	{
+		*(column_widths + 1) = physical_line_width;
+	}
 
+	// Calculate the Blank Lines column width
 	const unsigned int blank_line_width = CalculateNumberLength(data[TOTALS].blank_lines);
-	if (blank_line_width > *(column_widths + 2)) { *(column_widths + 2) = blank_line_width; }
+	if (blank_line_width > *(column_widths + 2))
+	{
+		*(column_widths + 2) = blank_line_width;
+	}
 
+	// Calculate the Comment Lines column width
 	const unsigned int comment_line_width = CalculateNumberLength(data[TOTALS].comment_lines);
-	if (comment_line_width > *(column_widths + 3)) { *(column_widths + 3) = comment_line_width; }
+	if (comment_line_width > *(column_widths + 3))
+	{
+		*(column_widths + 3) = comment_line_width;
+	}
 
+	// Calculate the Total Lines column width
 	const unsigned int total_line_width = CalculateNumberLength(data[TOTALS].total_lines);
-	if (total_line_width > *(column_widths + 4)) { *(column_widths + 4) = total_line_width; }
+	if (total_line_width > *(column_widths + 4))
+	{
+		*(column_widths + 4) = total_line_width;
+	}
 
+	// Calculate the File Count column width
 	const unsigned int file_count_width = CalculateNumberLength(data[TOTALS].file_count);
-	if (file_count_width > *(column_widths + 5)) { *(column_widths + 5) = file_count_width; }
+	if (file_count_width > *(column_widths + 5))
+	{
+		*(column_widths + 5) = file_count_width;
+	}
 
+	// Add padding on the right side of the columns to increase readability
 	const unsigned int column_padding = 3;
 	for (unsigned int i = 0; i < TOTAL_STATS_SUPPORTED; i++)
 	{
@@ -329,6 +363,7 @@ char * GetLine(FILE * file)
 		if (!leading_whitespace_processed)
 		{
 			if (cInt == ' ' || cInt == '\t') { continue; }
+
 			leading_whitespace_processed = true;
 		}
 

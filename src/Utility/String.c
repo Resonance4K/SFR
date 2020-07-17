@@ -135,3 +135,28 @@ bool StrStartsWith(const char *const string, const unsigned int count, ...)
 
 	return result;
 }
+
+// Defined in "String.h".
+int * StrToInt(const char *const string)
+{
+	int *const result = malloc( sizeof( *result ) );
+	*result = 0;
+
+	unsigned int index = 0;
+
+	while (*(string + index) != '\0')
+	{
+		// Prevent the string from being converted into a number if any character is not a valid number
+		if (*(string + index) < '0' || *(string + index) > '9')
+		{
+			return NULL;
+		}
+
+		const unsigned int number = (unsigned int) (*(string + index) - '0');
+		*result = (*result * 10) + number;
+
+		index++;
+	}
+
+	return result;
+}

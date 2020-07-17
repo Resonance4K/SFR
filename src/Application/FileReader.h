@@ -4,11 +4,13 @@
 
 #include <stdbool.h>
 
+#define DEFAULT_DEPTH    12
+
 // Initializes the properties of the file reader.
 void InitFileReader(void);
 
 // Reads the directory specified by the path and processes its contents.
-void ReadDirectory(const char *const path);
+void ReadDirectory(const char *const path, const int depth);
 
 // Returns true if the directory path is valid and false otherwise.
 bool IsValidDirectoryPath(const char *const path);

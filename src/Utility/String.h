@@ -32,4 +32,9 @@ char * StrSubstr(const char *const string, const unsigned int start, const unsig
 // NOTE: The count variable represents the number of target strings specified.
 bool StrStartsWith(const char *const string, const unsigned int count, ...);
 
+// Converts the string into a number.
+// Returns a pointer to the number represented by the string or NULL if the string is not a valid number.
+// NOTE: This allocates memory on the heap which must be freed after use.
+int * StrToInt(const char *const string);
+
 #endif

@@ -30,8 +30,11 @@ void InitFileReader(void)
 }
 
 // Defined in "FileReader.h".
-void ReadDirectory(const char *const path)
+void ReadDirectory(const char *const path, const int depth)
 {
+	// Stop traversing and processing directories when no further traversals are required due to the target depth being reached
+	if (depth < 0) { return; }
+
 	DIR * dir = opendir(path);
 
 	if (!IsValidDirectory(dir))
@@ -54,7 +57,7 @@ void ReadDirectory(const char *const path)
 
 		if (entry_type == DT_DIR)
 		{
-			ReadDirectory(fullpath);
+			ReadDirectory(fullpath, depth - 1);
 		}
 		else if (entry_type == DT_REG)
 		{
