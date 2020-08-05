@@ -30,7 +30,7 @@ The program is currently being supported on the following platforms:
 
 ## Installation
 
-_**Note:** The GNU Compiler Collection (GCC) is required to run the provided makefile for program compilation._
+_**Note:** The Make and GNU Compiler Collection (GCC) tools are required to use the provided makefile for program compilation._
 
 <br />
 
