@@ -92,11 +92,12 @@ int StrFindBack(const char *const string, const char target)
 // Defined in "String.h".
 char * StrSubstr(const char *const string, const unsigned int start, const unsigned int end)
 {
+	const unsigned int str_length = strlen(string);
+
 	if (end < start) { return EMPTY_STRING; }
-	if (start > (strlen(string) - 1)) { return EMPTY_STRING; }
+	if (start > (str_length - 1)) { return EMPTY_STRING; }
 
-	const unsigned int substr_length = (end > strlen(string) ? (strlen(string) - start) : (end - start));
-
+	const unsigned int substr_length = (end > str_length ? (str_length - start) : (end - start));
 	char *const substr = malloc( substr_length * sizeof( *substr ) + 1 );
 
 	for (unsigned int i = 0; i < substr_length; i++)

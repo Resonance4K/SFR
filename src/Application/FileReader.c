@@ -50,8 +50,8 @@ void ReadDirectory(const char *const path, const int depth)
 		const char *const entry_name = ent->d_name;
 		const unsigned int entry_type = ent->d_type;
 
-		if (strcmp(entry_name, ".") == 0 || strcmp(entry_name, "..") == 0) { continue; }
-		if (*entry_name == '.') { continue; }
+		// Ignore the current and parent directory entries as well as any other hidden files or folders that may exist
+		if (strcmp(entry_name, ".") == 0 || strcmp(entry_name, "..") == 0 || *entry_name == '.') { continue; }
 
 		const char *const fullpath = GetFullPath(path, entry_name);
 
@@ -92,17 +92,13 @@ bool IsValidDirectoryPath(const char *const path)
 // NOTE: This allocates memory on the heap which must be freed after use.
 char * GetFullPath(const char *const path, const char *const entry_name)
 {
-	const unsigned int path_length = strlen(path);
-	const unsigned int entry_name_length = strlen(entry_name);
-
-	const unsigned int length = path_length + 1 + entry_name_length;
-
-	char *const fullpath = malloc( length * sizeof( *fullpath ) + 1 );
+	const unsigned int fullpath_length = strlen(path) + 1 + strlen(entry_name);
+	char *const fullpath = malloc( fullpath_length * sizeof( *fullpath ) + 1 );
 
 	strcpy(fullpath, path);
 	strcat(fullpath, "/");
 	strcat(fullpath, entry_name);
-	*(fullpath + length) = '\0';
+	*(fullpath + fullpath_length) = '\0';
 
 	return fullpath;
 }
