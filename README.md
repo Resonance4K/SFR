@@ -112,9 +112,9 @@ The mandatory input parameters must be specified in order and are as follows:
 
 The optional input parameters can be specified in any order with the exception that they must be specified after the mandatory input parameters and are as follows:
 
-| Flags | Default Value | Name                      |
-|:-----:|:-------------:|:--------------------------|
-| d     | 12            | Directory Traversal Depth |
+| Position | Flags | Default Value | Name                      |
+|:--------:|:-----:|:-------------:|:--------------------------|
+|          | d     | 12            | Directory Traversal Depth |
 
 If an input parameter uses flags then their associated value is separated by a colon in the format
 

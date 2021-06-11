@@ -63,19 +63,16 @@ int GetDepthFromArgs(const char *const argument)
 {
 	int depth = DEFAULT_DEPTH;
 
-	if (argument != NULL)
+	if (argument != NULL && StrStartsWith(argument, 1, "d:"))
 	{
-		if (StrStartsWith(argument, 1, "d:"))
+		const int *const extracted_depth = StrToInt(argument + 2);
+
+		if (extracted_depth != NULL)
 		{
-			const int *const extracted_depth = StrToInt(argument + 2);
-
-			if (extracted_depth != NULL)
-			{
-				depth = *extracted_depth;
-			}
-
-			free(extracted_depth);
+			depth = *extracted_depth;
 		}
+
+		free(extracted_depth);
 	}
 
 	return depth;
